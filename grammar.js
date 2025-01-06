@@ -14,8 +14,16 @@ module.exports = grammar({
 	name: "fluent",
 	extras: ($) => [],
 	rules: {
-		body: ($) => seq(),
-		_entry: ($) => choice(),
+		body: ($) =>
+			seq(
+				repeat($._blank_line),
+				repeat(seq($._entry, $._line_break, repeat($._blank_line))),
+				optional($._entry),
+			),
+
+		_entry: ($) => choice($._comment, $.term, $.message),
+
+		_comment: ($) => choice($.resource_comment, $.block_comment, $.comment),
 		resource_comment: ($) => seq("###", optional(/[ \t].*/)),
 		block_comment: ($) => seq("##", optional(/[ \t].*/)),
 		comment: ($) => seq("#", optional(/[ \t].*/)),
@@ -25,8 +33,8 @@ module.exports = grammar({
 		external_identifier: ($) => /\$[a-zA-Z][a-zA-Z_0-9_-]+/,
 
 		/* line feed, carriage return; space, tab */
-		_line_break: ($) => /[\r\n]+/,
-		_inline_space: ($) => /[\u0020\t]+/,
+		_line_break: ($) => /[\u000A\u000D]+/,
+		_inline_space: ($) => /[\u0020\u0009]+/,
 		_blank_line: ($) => seq(optional($._inline_space), $._line_break),
 
 		/* if you break lines you need to indent afterwards */
