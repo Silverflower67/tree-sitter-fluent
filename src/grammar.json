@@ -160,11 +160,11 @@
     },
     "_line_break": {
       "type": "PATTERN",
-      "value": "[\\u000A\\u000D]+"
+      "value": "[\\r\\n]+"
     },
     "_inline_space": {
       "type": "PATTERN",
-      "value": "[\\u0020\\u0009]+"
+      "value": "[\\u0020\\t]+"
     },
     "_blank_line": {
       "type": "SEQ",
